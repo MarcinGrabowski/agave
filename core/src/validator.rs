@@ -1530,6 +1530,7 @@ impl Validator {
             None
         };
 
+        info!("[VALIDATOR] About to create TVU");
         let tvu = Tvu::new(
             vote_account,
             authorized_voter_keypairs,
