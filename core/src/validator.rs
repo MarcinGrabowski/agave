@@ -874,6 +874,7 @@ impl Validator {
         cluster_info.restore_contact_info(ledger_path, config.contact_save_interval);
         cluster_info.set_bind_ip_addrs(node.bind_ip_addrs.clone());
         let cluster_info = Arc::new(cluster_info);
+        info!("[VALIDATOR] Created ClusterInfo");
         let node_multihoming = Arc::new(NodeMultihoming::from(&node));
 
         assert!(is_snapshot_config_valid(&config.snapshot_config));
@@ -1341,6 +1342,7 @@ impl Validator {
             Some(stats_reporter_sender.clone()),
             exit.clone(),
         );
+        info!("[VALIDATOR] Created GossipService, creating serve_repair");
         let serve_repair = config.repair_handler_type.create_serve_repair(
             blockstore.clone(),
             cluster_info.clone(),
@@ -1361,6 +1363,7 @@ impl Validator {
             rpc_override_health_check,
             &start_progress,
         )?;
+        info!("[VALIDATOR] wait_for_supermajority completed, waited: {}", waited_for_supermajority);
 
         let blockstore_metric_report_service =
             BlockstoreMetricReportService::new(blockstore.clone(), exit.clone());
@@ -1368,6 +1371,7 @@ impl Validator {
         let wait_for_vote_to_start_leader =
             !waited_for_supermajority && !config.no_wait_for_vote_to_start_leader;
 
+        info!("[VALIDATOR] Creating PohService");
         let poh_service = PohService::new(
             poh_recorder.clone(),
             &genesis_config.poh_config,
